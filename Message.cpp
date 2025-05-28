@@ -2,19 +2,6 @@
 #include <iostream>
 #include <fstream>
 
-#include "HashUtility.h"
-
-void Message::generate_hash()
-{
-    String represent = sender_;
-    represent += dateTime_;
-    represent += message_;
-
-    const uint8_t* temp = HashUtility::hash_message(represent.c_str());
-    HashUtility::copy_hash(hash_, temp);
-    delete[] temp;
-}
-
 Message::Message() = default;
 
 Message::Message(String sender, String message) : sender_(std::move(sender)), message_(std::move(message))
@@ -22,9 +9,6 @@ Message::Message(String sender, String message) : sender_(std::move(sender)), me
     // Setting current DateTime of message
     std::time_t now = time(nullptr);
     ctime_s(dateTime_, DATE_TIME_MAX_SIZE, &now);
-
-    // Generates message's hash
-    generate_hash();
 }
 
 // Serializes message into a binary file
@@ -63,8 +47,6 @@ void Message::deserialize(std::ifstream& ifs)
     ifs.read(str, temp + 1);
     message_ = str;
     delete[] str;
-
-    generate_hash();
 }
 
 // Serializes message into a text file
@@ -103,8 +85,6 @@ void Message::deserialize_debug(std::ifstream& ifs)
     ifs.getline(str, temp + 1);
     message_ = str;
     delete[] str;
-
-    generate_hash();
 }
 
 std::ostream& operator<<(std::ostream& os, const Message& message)
