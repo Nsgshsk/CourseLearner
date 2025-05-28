@@ -1,6 +1,11 @@
 ﻿#include "User.h"
 #include <fstream>
 
+void User::setId(int id)
+{
+    id_ = id;
+}
+
 User::User() = default;
 
 User::User(const String& first_name, const String& last_name, const String& password) : id_(0)

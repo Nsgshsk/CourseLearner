@@ -14,6 +14,7 @@ class User : public ISerializable, public ISerializableDebug
 
 protected:
     virtual void generate_id() = 0;
+    void setId(int id);
 
 public:
     User();
