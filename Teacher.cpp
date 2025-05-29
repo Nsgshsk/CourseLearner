@@ -1,6 +1,6 @@
 ﻿#include "Teacher.h"
 
-static int PREFIX = 2000;
+static constexpr int PREFIX = 2000;
 
 void Teacher::generate_id()
 {

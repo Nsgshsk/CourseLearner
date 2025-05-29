@@ -39,3 +39,5 @@ public:
 };
 
 String operator+(const String& left, const String& right);
+bool operator==(const String& left, const String& right);
+bool operator!=(const String& left, const String& right);

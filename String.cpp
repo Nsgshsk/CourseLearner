@@ -159,6 +159,26 @@ String operator+(const String& left, const String& right)
     return str += right;
 }
 
+bool operator==(const String& left, const String& right)
+{
+    if (left.isEmpty() && right.isEmpty())
+        return true;
+
+    if (left.length() != right.length())
+        return false;
+
+    for (size_t i = 0; i < left.length(); i++)
+        if (left[i] != right[i])
+            return false;
+
+    return true;
+}
+
+bool operator!=(const String& left, const String& right)
+{
+    return !(left == right);
+}
+
 std::ostream& operator<<(std::ostream& os, const String& other)
 {
     return os << other.data_;

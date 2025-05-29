@@ -155,6 +155,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Admin.cpp" />
+    <ClCompile Include="Submission.cpp" />
+    <ClCompile Include="Course.cpp" />
     <ClCompile Include="CourseLearner.cpp" />
     <ClCompile Include="Message.cpp" />
     <ClCompile Include="String.cpp" />
@@ -164,6 +166,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Admin.h" />
+    <ClInclude Include="Submission.h" />
+    <ClInclude Include="Course.h" />
     <ClInclude Include="ISerializable.h" />
     <ClInclude Include="List.hpp" />
     <ClInclude Include="Message.h" />

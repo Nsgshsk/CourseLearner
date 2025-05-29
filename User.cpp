@@ -1,6 +1,9 @@
 ﻿#include "User.h"
 #include <fstream>
 
+static constexpr int TEACHER_PREFIX = 2000;
+static constexpr int STUDENT_PREFIX = 1000;
+
 void User::setId(int id)
 {
     id_ = id;
@@ -124,7 +127,16 @@ void User::deserialize_debug(std::ifstream& ifs)
 
 std::ostream& operator<<(std::ostream& os, const User& user)
 {
-    os << user.first_name_ << '\n';
-    os << user.last_name_ << '\n';
+    os << user.first_name_ << " | ";
+    os << user.last_name_ << " | ";
+    if (user.getId() < STUDENT_PREFIX)
+        os << "Admin";
+    else if (user.getId() % TEACHER_PREFIX < STUDENT_PREFIX)
+        os << "Teacher";
+    else if (user.getId() % STUDENT_PREFIX < STUDENT_PREFIX)
+        os << "Student";
+
+    os << " | ";
+    os << user.getId() << '\n';
     return os;
 }

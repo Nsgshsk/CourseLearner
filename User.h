@@ -11,6 +11,7 @@ class User : public ISerializable, public ISerializableDebug
     String last_name_;
     String password_;
     List<Message> inbox_;
+    List<int> course_ids_;
 
 protected:
     virtual void generate_id() = 0;

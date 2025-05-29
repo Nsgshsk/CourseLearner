@@ -1,6 +1,6 @@
 ﻿#include "Student.h"
 
-static int PREFIX = 1000;
+static constexpr int PREFIX = 1000;
 
 void Student::generate_id()
 {
