@@ -23,6 +23,23 @@ int User::getId() const
     return id_;
 }
 
+int User::getType() const
+{
+    if (getId() < STUDENT_PREFIX)
+        return 1;
+    if (getId() % TEACHER_PREFIX < STUDENT_PREFIX)
+        return 2;
+    if (getId() % STUDENT_PREFIX < STUDENT_PREFIX)
+        return 3;
+
+    return -1;
+}
+
+bool User::validatePassword(const String& password)
+{
+    return password_ == password;
+}
+
 size_t User::getInboxSize() const
 {
     return inbox_.getSize();
@@ -125,16 +142,35 @@ void User::deserialize_debug(std::ifstream& ifs)
     }
 }
 
+bool User::operator==(const User& rhs) const
+{
+    return id_ == rhs.id_;
+}
+
+bool operator!=(const User& lhs, const User& rhs)
+{
+    return !(lhs == rhs);
+}
+
 std::ostream& operator<<(std::ostream& os, const User& user)
 {
     os << user.first_name_ << " | ";
     os << user.last_name_ << " | ";
-    if (user.getId() < STUDENT_PREFIX)
-        os << "Admin";
-    else if (user.getId() % TEACHER_PREFIX < STUDENT_PREFIX)
-        os << "Teacher";
-    else if (user.getId() % STUDENT_PREFIX < STUDENT_PREFIX)
-        os << "Student";
+    switch (user.getType())
+    {
+        case 1:
+            os << "Admin";
+            break;
+        case 2:
+            os << "Teacher";
+            break;
+        case 3:
+            os << "Student";
+            break;
+
+        default:
+            throw std::invalid_argument("Invalid User Type");
+    }
 
     os << " | ";
     os << user.getId() << '\n';

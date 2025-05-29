@@ -67,6 +67,16 @@ Course::Course(const String& name, const String& password)
     password_ = password;
 }
 
+const String& Course::getName() const
+{
+    return name_;
+}
+
+bool Course::validatePassword(const String& password) const
+{
+    return password_ == password;
+}
+
 void Course::enroll(int participant_id)
 {
     if (participant_id % TEACHER_PREFIX < STUDENT_PREFIX)
@@ -106,7 +116,7 @@ void Course::submitAssignment(const String& name, const String& message, int stu
     throw std::invalid_argument("Assignment doesn't exist");
 }
 
-void Course::gradeSubmission(const String& name, int student_id, uint8_t grade, const String& message)
+void Course::gradeSubmission(const String& name, int student_id, uint8_t grade, const String& message, int teacher_id)
 {
     for (size_t i = 0; i < assignments_.getSize(); i++)
         if (assignments_[i].name == name)
@@ -115,7 +125,7 @@ void Course::gradeSubmission(const String& name, int student_id, uint8_t grade, 
             for (size_t j = 0; j < temp.getSize(); j++)
                 if (temp[j].getStudentId() == student_id)
                 {
-                    temp[j].grade(grade, message, TODO);
+                    temp[j].grade(grade, message, teacher_id);
                     return;
                 }
             
@@ -123,6 +133,11 @@ void Course::gradeSubmission(const String& name, int student_id, uint8_t grade, 
         }
     
     throw std::invalid_argument("Assignment doesn't exist");
+}
+
+bool Course::operator==(const Course& rhs) const
+{
+    return name_ == rhs.name_;
 }
 
 void Course::serialize(std::ofstream& ofs) const
@@ -135,10 +150,7 @@ void Course::serialize(std::ofstream& ofs) const
     ofs.write((char*)&temp, sizeof(size_t));
     ofs.write(password_.c_str(), temp + 1);
 
-    temp = assignments_.getSize();
-    ofs.write((char*)&temp, sizeof(size_t));
-    for (size_t i = 0; i < assignments_.getSize(); i++)
-        assignments_[i].serialize(ofs);
+    assignments_.serialize(ofs);
 
     temp = participants_ids_.getSize();
     ofs.write((char*)&temp, sizeof(size_t));
@@ -161,9 +173,7 @@ void Course::deserialize(std::ifstream& ifs)
     password_ = str;
     delete[] str;
 
-    ifs.read((char*)&temp, sizeof(size_t));
-    for (size_t i = 0; i < temp; i++)
-        assignments_[i].deserialize(ifs);
+    assignments_.deserialize(ifs);
 
     ifs.read((char*)&temp, sizeof(size_t));
     for (size_t i = 0; i < temp; i++)
@@ -182,9 +192,7 @@ void Course::serialize_debug(std::ofstream& ofs) const
     ofs << password_.length() << '\n';
     ofs << password_ << '\n';
 
-    ofs << assignments_.getSize() << '\n';
-    for (size_t i = 0; i < assignments_.getSize(); i++)
-        assignments_[i].serialize_debug(ofs);
+    assignments_.serialize_debug(ofs);
 
     ofs << participants_ids_.getSize() << '\n';
     for (size_t i = 0; i < participants_ids_.getSize(); i++)
@@ -195,12 +203,10 @@ void Course::deserialize_debug(std::ifstream& ifs)
 {
     ifs >> name_;
     ifs >> password_;
+    
+    assignments_.deserialize_debug(ifs);
 
     size_t temp;
-    ifs >> temp;
-    for (size_t i = 0; i < temp; i++)
-        assignments_[i].deserialize_debug(ifs);
-
     ifs >> temp;
     for (size_t i = 0; i < temp; i++)
     {
@@ -208,4 +214,9 @@ void Course::deserialize_debug(std::ifstream& ifs)
         ifs >> id;
         participants_ids_.add(id);
     }
+}
+
+bool operator!=(const Course& lhs, const Course& rhs)
+{
+    return !(lhs == rhs);
 }

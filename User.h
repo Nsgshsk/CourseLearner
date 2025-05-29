@@ -22,6 +22,8 @@ public:
     User(const String& first_name, const String& last_name, const String& password);
     
     int getId() const;
+    int getType() const;
+    bool validatePassword(const String& password);
     
     size_t getInboxSize() const;
     const Message& operator[](size_t index) const;
@@ -35,5 +37,8 @@ public:
     void serialize_debug(std::ofstream& ofs) const override;
     void deserialize_debug(std::ifstream& ifs) override;
 
+    bool operator==(const User& rhs) const;
     friend std::ostream& operator<<(std::ostream& os, const User& user);
 };
+
+bool operator!=(const User& lhs, const User& rhs);
