@@ -48,10 +48,11 @@ void Submission::Grade::deserialize_debug(std::ifstream& ifs)
 
 Submission::Submission() = default;
 
-Submission::Submission(const String& message, int student_id)
+Submission::Submission(const String& message, int student_id, const String& assignment_title)
 {
     message_ = message;
     student_id_ = student_id;
+    assignment_title_ = assignment_title;
 }
 
 void Submission::grade(uint8_t grade, const String& message, int teacher_id)
@@ -72,6 +73,10 @@ void Submission::serialize(std::ofstream& ofs) const
     ofs.write((const char*)&temp, sizeof(size_t));
     ofs.write(message_.c_str(), temp + 1);
 
+    temp = assignment_title_.length();
+    ofs.write((const char*)&temp, sizeof(size_t));
+    ofs.write(assignment_title_.c_str(), temp + 1);
+
     grade_.serialize(ofs);
 }
 
@@ -85,6 +90,12 @@ void Submission::deserialize(std::ifstream& ifs)
     ifs.read(str, temp + 1);
     message_ = str;
     delete[] str;
+    
+    ifs.read((char*)&temp, sizeof(size_t));
+    str = new char[temp + 1];
+    ifs.read(str, temp + 1);
+    assignment_title_ = str;
+    delete[] str;
 
     grade_.deserialize(ifs);
 }
@@ -96,12 +107,24 @@ void Submission::serialize_debug(std::ofstream& ofs) const
     ofs << message_.length() << '\n';
     ofs << message_ << '\n';
 
+    ofs << assignment_title_.length() << '\n';
+    ofs << assignment_title_ << '\n';
+
     grade_.serialize_debug(ofs);
 }
 
 void Submission::deserialize_debug(std::ifstream& ifs)
 {
-    ifs >> student_id_ >> message_;
+    ifs >> student_id_ >> message_ >> assignment_title_;
 
     grade_.deserialize_debug(ifs);
+}
+
+std::ostream& operator<<(std::ostream& os, const Submission& submission)
+{
+    os << submission.assignment_title_ << " | ";
+    os << submission.grade_.grade << " | ";
+    os << submission.grade_.message << '\n';
+    
+    return os;
 }

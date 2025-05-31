@@ -4,6 +4,31 @@
 static constexpr int TEACHER_PREFIX = 2000;
 static constexpr int STUDENT_PREFIX = 1000;
 
+String User::getFirstName() const
+{
+    return first_name_;
+}
+
+String User::getLastName() const
+{
+    return last_name_;
+}
+
+String User::getFullName() const
+{
+    return first_name_ + last_name_;
+}
+
+void User::addCourse(const String& course)
+{
+    courses.add(course);
+}
+
+void User::clearCourses()
+{
+    courses.clear();
+}
+
 void User::setId(int id)
 {
     id_ = id;
@@ -58,6 +83,11 @@ void User::addMessage(const Message& message)
 void User::clearMessages()
 {
     inbox_.clear();
+}
+
+const List<String>& User::getCourses() const
+{
+    return courses;
 }
 
 void User::serialize(std::ofstream& ofs) const

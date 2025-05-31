@@ -20,13 +20,14 @@ class Submission : public ISerializable, public ISerializableDebug
         void serialize_debug(std::ofstream& ofs) const override;
         void deserialize_debug(std::ifstream& ifs) override;
     };
-    
+
+    String assignment_title_;
     String message_;
     Grade grade_;
     int student_id_;
 public:
     Submission();
-    Submission(const String& message, int student_id);
+    Submission(const String& message, int student_id, const String& assignment_title);
 
     void grade(uint8_t grade, const String& message, int teacher_id);
     int getStudentId() const;
@@ -35,4 +36,6 @@ public:
     void deserialize(std::ifstream& ifs) override;
     void serialize_debug(std::ofstream& ofs) const override;
     void deserialize_debug(std::ifstream& ifs) override;
+
+    friend std::ostream& operator<<(std::ostream& os, const Submission& submission);
 };

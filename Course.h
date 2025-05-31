@@ -14,6 +14,8 @@ class Course final : public ISerializable, public ISerializableDebug
         List<Submission> submissions;
 
         Assignment(const String& name);
+
+        const Submission* getUserSubmission(int user_id) const;
         
         void serialize(std::ofstream& ofs) const override;
         void deserialize(std::ifstream& ifs) override;
@@ -31,6 +33,7 @@ public:
 
     const String& getName() const;
     bool validatePassword(const String& password) const;
+    bool isUserEnrolled(int user_id) const;
 
     void enroll(int participant_id);
     void enroll(int participant_id, const String& password);
@@ -38,6 +41,8 @@ public:
     void createAssignment(const String& name);
     void submitAssignment(const String& name, const String& message, int student_id);
     void gradeSubmission(const String& name, int student_id, uint8_t grade, const String& message, int teacher_id);
+
+    List<Submission> getUserAssignments(int user_id) const;
 
     bool operator==(const Course& rhs) const;
     

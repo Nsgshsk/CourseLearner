@@ -11,10 +11,10 @@ class User : public ISerializable, public ISerializableDebug
     String last_name_;
     String password_;
     List<Message> inbox_;
-    List<int> course_ids_;
+    List<String> courses;
 
 protected:
-    virtual void generate_id() = 0;
+    virtual void generate_id();
     void setId(int id);
 
 public:
@@ -23,6 +23,9 @@ public:
     
     int getId() const;
     int getType() const;
+    String getFirstName() const;
+    String getLastName() const;
+    String getFullName() const;
     bool validatePassword(const String& password);
     
     size_t getInboxSize() const;
@@ -30,6 +33,10 @@ public:
 
     void addMessage(const Message& message);
     void clearMessages();
+
+    const List<String>& getCourses() const;
+    void addCourse(const String& course);
+    void clearCourses();
 
     void serialize(std::ofstream& ofs) const override;
     void deserialize(std::ifstream& ifs) override;

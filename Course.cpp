@@ -9,6 +9,15 @@ Course::Assignment::Assignment(const String& name)
     this->name = name;
 }
 
+const Submission* Course::Assignment::getUserSubmission(int user_id) const
+{
+    for (size_t i = 0; i < submissions.getSize(); i++)
+        if (submissions[i].getStudentId() == user_id)
+            return &submissions[i];
+
+    return nullptr;
+}
+
 void Course::Assignment::serialize(std::ofstream& ofs) const
 {
     size_t temp = name.length();
@@ -77,6 +86,15 @@ bool Course::validatePassword(const String& password) const
     return password_ == password;
 }
 
+bool Course::isUserEnrolled(int user_id) const
+{
+    for (size_t i = 0; i < participants_ids_.getSize(); i++)
+        if (participants_ids_[i] == user_id)
+            return true;
+    
+    return false;
+}
+
 void Course::enroll(int participant_id)
 {
     if (participant_id % TEACHER_PREFIX < STUDENT_PREFIX)
@@ -133,6 +151,18 @@ void Course::gradeSubmission(const String& name, int student_id, uint8_t grade, 
         }
     
     throw std::invalid_argument("Assignment doesn't exist");
+}
+
+List<Submission> Course::getUserAssignments(int user_id) const
+{
+    List<Submission> temp;
+    for (size_t i = 0; i < assignments_.getSize(); i++)
+    {
+        const Submission* submission = assignments_[i].getUserSubmission(user_id);
+        if (submission != nullptr)
+            temp.add(*submission);
+    }
+    return temp;
 }
 
 bool Course::operator==(const Course& rhs) const

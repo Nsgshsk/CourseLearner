@@ -7,7 +7,11 @@
 #include "StudentManager.h"
 #include "User.h"
 
-static char Buffer[255 + 1];
+namespace
+{
+    constexpr uint8_t BUFFER_SIZE = 255;
+    char Buffer[BUFFER_SIZE + 1];
+}
 
 void AppManager::login()
 {
@@ -51,7 +55,7 @@ AppManager::AppManager()
 {
     try
     {
-        data_.loadData();
+        data_.loadDataDebug();
     }
     catch (std::exception& e)
     {
@@ -65,7 +69,7 @@ AppManager::~AppManager()
 {
     try
     {
-        data_.saveData();
+        data_.saveDataDebug();
     }
     catch (std::exception& e)
     {
