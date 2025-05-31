@@ -89,8 +89,8 @@ void Message::deserialize_debug(std::ifstream& ifs)
 
 std::ostream& operator<<(std::ostream& os, const Message& message)
 {
-    os << message.sender_ << '\n';
-    os << message.dateTime_ << '\n';
+    os << "By " << message.sender_ << '\n';
+    os << "At " << message.dateTime_ << '\n';
     os << message.message_ << '\n';
     return os;
 }
