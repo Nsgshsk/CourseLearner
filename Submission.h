@@ -31,6 +31,7 @@ public:
 
     void grade(double grade, const String& message, int teacher_id);
     int getStudentId() const;
+    const String& getStudentMessage() const;
     
     void serialize(std::ofstream& ofs) const override;
     void deserialize(std::ifstream& ifs) override;

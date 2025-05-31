@@ -67,6 +67,11 @@ int Submission::getStudentId() const
     return student_id_;
 }
 
+const String& Submission::getStudentMessage() const
+{
+    return message_;
+}
+
 void Submission::serialize(std::ofstream& ofs) const
 {
     ofs.write((const char*)&student_id_, sizeof(int));

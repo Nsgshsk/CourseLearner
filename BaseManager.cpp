@@ -26,8 +26,12 @@ void BaseManager::change_password(const String& old_password, const String& new_
 
 void BaseManager::mailbox() const
 {
-    for (size_t i = 0; i < user_->getInboxSize(); i++)
-        std::cout << (*user_)[i];
+    size_t temp = user_->getInboxSize();
+    if (temp == 0)
+        std::cout << "We have no messages to show!\n";
+    else
+        for (size_t i = 0; i < temp; i++)
+            std::cout << (*user_)[i];
 }
 
 void BaseManager::clear_mailbox() const

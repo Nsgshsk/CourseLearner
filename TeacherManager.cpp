@@ -145,7 +145,18 @@ void TeacherManager::view_assignment_submissions(const String& course, const Str
         const List<Submission> submissions = temp.getSubmissions(assignment);
         std::cout << assignment << ":\n";
         for (size_t i = 0; i < submissions.getSize(); i++)
-            std::cout << submissions[i] << "\n";
+        {
+            try
+            {
+                const User& submitter = data_->getUser(submissions[i].getStudentId());
+                std::cout << submitter.getFullName() << ", " << submitter.getId() << ": "
+                << submissions[i].getStudentMessage() << "\n";
+            }
+            catch (...)
+            {
+                continue;
+            }
+        }
     }
     catch (std::exception& e)
     {
@@ -173,7 +184,14 @@ void TeacherManager::create_course_input() const
     if (password.isEmpty())
         create_course(course);
     else
+    {
+        const char* temp = password.c_str();
+        while (*temp == ' ')
+            ++temp;
+        strcpy_s(Buffer, temp);
+        password = Buffer;
         create_course(course, password);
+    }
 }
 
 void TeacherManager::add_to_course_input() const
@@ -209,7 +227,7 @@ void TeacherManager::grade_homework_input() const
     std::cin.getline(Buffer, BUFFER_SIZE);
     String message = Buffer;
     
-    grade_homework(course, title, user_id, grade, title);
+    grade_homework(course, title, user_id, grade, message);
 }
 
 void TeacherManager::message_students_input() const
@@ -238,6 +256,7 @@ void TeacherManager::login()
 {
     try
     {
+        std::cout << "Login successful!\n";
         std::cout << *user_ << '\n';
         while (true)
         {

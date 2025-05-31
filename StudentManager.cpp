@@ -90,6 +90,7 @@ void StudentManager::login()
 {
     try
     {
+        std::cout << "Login successful!\n";
         std::cout << *user_ << '\n';
         while (true)
         {

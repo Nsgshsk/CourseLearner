@@ -188,6 +188,7 @@ void AdminManager::login()
 {
     try
     {
+        std::cout << "Login successful!\n";
         std::cout << "Admin | " << user_->getId() << '\n';
         while (true)
         {
