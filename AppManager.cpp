@@ -29,15 +29,15 @@ void AppManager::login()
         switch (user.getType())
         {
         case 1:
-            AdminManager am(user, data_);
+            AdminManager am(&user, &data_);
             am.login();
             break;
         case 2:
-            TeacherManager tm(user, data_);
+            TeacherManager tm(&user, &data_);
             tm.login();
             break;
         case 3:
-            StudentManager sm(user, data_);
+            StudentManager sm(&user, &data_);
             sm.login();
             break;
 

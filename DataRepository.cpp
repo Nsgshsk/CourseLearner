@@ -1,6 +1,10 @@
 ﻿#include "DataRepository.h"
+
+#include "Admin.h"
 #include "User.h"
 #include "Course.h"
+#include "Student.h"
+#include "Teacher.h"
 
 constexpr char USER_FILE[] = "users.bin";
 constexpr char COURSE_FILE[] = "course.bin";
@@ -33,6 +37,16 @@ Course& DataRepository::getCourse(const String& name)
             return courses_[i];
     
     throw std::out_of_range("Couldn't find course");
+}
+
+const List<User>& DataRepository::getUsers() const
+{
+    return users_;
+}
+
+List<User>& DataRepository::getUsers()
+{
+    return users_;
 }
 
 const Course& DataRepository::getCourse(const String& name) const
@@ -124,6 +138,11 @@ void DataRepository::loadData()
     courses_.deserialize(course_file);
 
     course_file.close();
+
+    uint8_t temp = users_.getSize() % 255;
+    Admin::setCount(temp);
+    Teacher::setCount(temp);
+    Student::setCount(temp);
 }
 
 void DataRepository::saveDataDebug() const
@@ -162,4 +181,9 @@ void DataRepository::loadDataDebug()
     courses_.deserialize_debug(course_file);
 
     course_file.close();
+
+    uint8_t temp = users_.getSize() % 255;
+    Admin::setCount(temp);
+    Teacher::setCount(temp);
+    Student::setCount(temp);
 }

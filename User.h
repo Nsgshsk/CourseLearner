@@ -26,7 +26,9 @@ public:
     String getFirstName() const;
     String getLastName() const;
     String getFullName() const;
+    
     bool validatePassword(const String& password);
+    void changePassword(const String& old_password, const String& new_password);
     
     size_t getInboxSize() const;
     const Message& operator[](size_t index) const;

@@ -1,1 +1,238 @@
 ﻿#include "TeacherManager.h"
+
+#include "Course.h"
+#include "String.h"
+#include "User.h"
+#include "DataRepository.h"
+
+namespace
+{
+    constexpr uint8_t BUFFER_SIZE = 255;
+    char Buffer[BUFFER_SIZE + 1];
+
+    String generateRandomString()
+    {
+        std::time_t now = time(nullptr);
+        ctime_s(Buffer, BUFFER_SIZE, &now);
+        return Buffer;
+    }
+}
+
+void TeacherManager::create_course(const String& course) const
+{
+    create_course(course, generateRandomString());
+}
+
+void TeacherManager::create_course(const String& course, const String& password) const
+{
+    data_->addCourse(Course(course, password, user_->getId()));
+}
+
+void TeacherManager::set_course_password(const String& course, const String& password) const
+{
+    try
+    {
+        Course& temp = data_->getCourse(course);
+        if (!temp.isCreator(user_->getId()))
+            throw std::invalid_argument("You don't have permission on this course");
+
+        temp.changePassword(password);
+        std::cout << "Changed course password successfully!\n"; 
+    }
+    catch (std::exception& e)
+    {
+        std::cout << e.what() << '\n';
+    }
+}
+
+void TeacherManager::add_to_course(const String& course, int user_id) const
+{
+    try
+    {
+        Course& temp = data_->getCourse(course);
+        if (!temp.isCreator(user_->getId()))
+            throw std::invalid_argument("You don't have permission on this course");
+
+        temp.enroll(user_->getId());
+    }
+    catch (std::exception& e)
+    {
+        std::cout << e.what() << '\n';
+    }
+}
+
+void TeacherManager::assign_homework(const String& course, const String& title) const
+{
+    try
+    {
+        Course& temp = data_->getCourse(course);
+        if (!temp.isCreator(user_->getId()))
+            throw std::invalid_argument("You don't have permission on this course");
+
+        temp.createAssignment(title);
+        std::cout << "Created assignment successfully!\n";
+    }
+    catch (std::exception& e)
+    {
+        std::cout << e.what() << '\n';
+    }
+}
+
+void TeacherManager::grade_homework(const String& course, const String& title, int user_id, double grade,
+    const String& message) const
+{
+    try
+    {
+        Course& temp = data_->getCourse(course);
+        if (!temp.isCreator(user_->getId()))
+            throw std::invalid_argument("You don't have permission on this course course");
+
+        temp.gradeSubmission(title, user_id, grade, message, user_->getId());
+    }
+    catch (std::exception& e)
+    {
+        std::cout << e.what() << '\n';
+    }
+}
+
+void TeacherManager::message_students(const String& course, const String& message) const
+{
+    try
+    {
+        Course& temp = data_->getCourse(course);
+        if (!temp.isCreator(user_->getId()))
+            throw std::invalid_argument("You don't have permission on this course");
+
+        List<int> students = temp.getParticipantsIds();
+        const Message msg(user_->getFullName(), message);
+        for (size_t i = 0; i < students.getSize(); i++)
+            try
+            {
+                User& student = data_->getUser(students[i]);
+                student.addMessage(msg);
+            }
+            catch (...)
+            {
+                continue;
+            }
+    }
+    catch (std::exception& e)
+    {
+        std::cout << e.what() << '\n';
+    }
+}
+
+void TeacherManager::create_course_input() const
+{
+    std::cin >> Buffer;
+    String course = Buffer;
+    std::cin.getline(Buffer, BUFFER_SIZE);
+    String password = Buffer;
+
+    if (password.isEmpty())
+        create_course(course);
+    else
+        create_course(course, password);
+}
+
+void TeacherManager::add_to_course_input() const
+{
+    std::cin >> Buffer;
+    String course = Buffer;
+    int user_id;
+    std::cin >> user_id;
+
+    add_to_course(course, user_id);
+}
+
+void TeacherManager::assign_homework_input() const
+{
+    std::cin >> Buffer;
+    String course = Buffer;
+    std::cin >> Buffer;
+    String title = Buffer;
+
+    assign_homework(course, title);
+}
+
+void TeacherManager::grade_homework_input() const
+{
+    std::cin >> Buffer;
+    String course = Buffer;
+    std::cin >> Buffer;
+    String title = Buffer;
+    int user_id;
+    std::cin >> user_id;
+    double grade;
+    std::cin >> grade;
+    std::cin.getline(Buffer, BUFFER_SIZE);
+    String message = Buffer;
+    
+    grade_homework(course, title, user_id, grade, title);
+}
+
+void TeacherManager::message_students_input() const
+{
+    std::cin >> Buffer;
+    String course = Buffer;
+    std::cin.getline(Buffer, BUFFER_SIZE);
+    String message = Buffer;
+
+    message_students(course, message);
+}
+
+void TeacherManager::set_course_password_input() const
+{
+    std::cin >> Buffer;
+    String course = Buffer;
+    std::cin >> Buffer;
+    String password = Buffer;
+
+    set_course_password(course, password);
+}
+
+TeacherManager::TeacherManager(User* user, DataRepository* data) : BaseManager(user, data) {}
+
+void TeacherManager::login()
+{
+    try
+    {
+        while (true)
+        {
+            std::cin >> Buffer;
+            String command = Buffer;
+            if (command == "logout")
+            {
+                std::cout << "Logging out...";
+                break;
+            }
+            if (command == "mailbox")
+                mailbox();
+            else if (command == "clear_mailbox")
+                clear_mailbox();
+            else if (command == "message")
+                message_input();
+            else if (command == "change_password")
+                change_password_input();
+            else if (command == "create_course")
+                create_course_input();
+            else if (command == "add_to_course")
+                add_to_course_input();
+            else if (command == "assign_homework")
+                assign_homework_input();
+            else if (command == "grade_homework")
+                grade_homework_input();
+            else if (command == "message_students")
+                message_students_input();
+            else if (command == "set_course_password")
+                set_course_password_input();
+            else
+                std::cout << "Invalid Command";
+        }
+    }
+    catch (std::exception& e)
+    {
+        std::cout << e.what() << '\n';
+        std::cout << "!!! Fatal error !!!\n";
+    }
+}

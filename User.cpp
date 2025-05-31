@@ -29,6 +29,11 @@ void User::clearCourses()
     courses.clear();
 }
 
+void User::generate_id()
+{
+    throw std::exception("Not implemented");
+}
+
 void User::setId(int id)
 {
     id_ = id;
@@ -63,6 +68,14 @@ int User::getType() const
 bool User::validatePassword(const String& password)
 {
     return password_ == password;
+}
+
+void User::changePassword(const String& old_password, const String& new_password)
+{
+    if (!validatePassword(old_password))
+        throw std::exception("Password validation failed");
+
+    password_ = new_password;
 }
 
 size_t User::getInboxSize() const

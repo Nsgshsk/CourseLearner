@@ -125,7 +125,14 @@ size_t String::length() const
 
 bool String::isEmpty() const
 {
-    return length() == 0;
+    if (length() == 0)
+        return true;
+
+    for (size_t i = 0; i < length(); ++i)
+        if (data_[i] != '\n' && data_[i] != ' ')
+            return false;
+        
+    return true;
 }
 
 void String::reverse()

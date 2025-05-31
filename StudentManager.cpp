@@ -1,7 +1,7 @@
 ﻿#include "StudentManager.h"
 
-#include <string>
-
+#include "DataRepository.h"
+#include "User.h"
 #include "Course.h"
 
 namespace
@@ -10,18 +10,7 @@ namespace
     char Buffer[BUFFER_SIZE + 1];
 }
 
-void StudentManager::mailbox()
-{
-    for (size_t i = 0; i < user_->getInboxSize(); i++)
-        std::cout << (*user_)[i];
-}
-
-void StudentManager::clear_mailbox()
-{
-    user_->clearMessages();
-}
-
-void StudentManager::enroll(const String& course, const String& password)
+void StudentManager::enroll(const String& course, const String& password) const
 {
     try
     {
@@ -36,7 +25,7 @@ void StudentManager::enroll(const String& course, const String& password)
     }
 }
 
-void StudentManager::submit_assignment(const String& course, const String& assignment, const String& message)
+void StudentManager::submit_assignment(const String& course, const String& assignment, const String& message) const
 {
     try
     {
@@ -52,20 +41,7 @@ void StudentManager::submit_assignment(const String& course, const String& assig
     }
 }
 
-void StudentManager::message(int user_id, const String& message)
-{
-    try
-    {
-        User& temp = data_->getUser(user_id);
-        temp.addMessage(Message(user_->getFullName(), message));
-    }
-    catch (std::exception& e)
-    {
-        std::cout << e.what() << '\n';
-    }
-}
-
-void StudentManager::grades()
+void StudentManager::grades() const
 {
     try
     {
@@ -84,59 +60,64 @@ void StudentManager::grades()
     }
 }
 
-StudentManager::StudentManager(User& user, DataRepository& data)
+StudentManager::StudentManager(User* user, DataRepository* data) : BaseManager(user, data) {}
+
+void StudentManager::enroll_input() const
 {
-    user_ = &user;
-    data_ = &data;
+    std::cin >> Buffer;
+    String course = Buffer;
+    std::cin >> Buffer;
+    String password = Buffer;
+            
+    enroll(course, password);
+}
+
+void StudentManager::submit_assignment_input() const
+{
+    std::cin >> Buffer;
+    String course = Buffer;
+    std::cin >> Buffer;
+    String assignment = Buffer;
+    std::cin.getline(Buffer, BUFFER_SIZE);
+    String message = Buffer;
+            
+    submit_assignment(course, assignment, message);
 }
 
 void StudentManager::login()
 {
-    while (true)
+    try
     {
-        std::cin >> Buffer;
-        String command = Buffer;
-        if (command == "logout")
-        {
-            std::cout << "Logging out...";
-            break;
-        }
-        if (command == "mailbox")
-            mailbox();
-        else if (command == "clear_mailbox")
-            clear_mailbox();
-        else if (command == "enroll")
+        while (true)
         {
             std::cin >> Buffer;
-            String course = Buffer;
-            std::cin >> Buffer;
-            String password = Buffer;
-            
-            enroll(course, password);
+            String command = Buffer;
+            if (command == "logout")
+            {
+                std::cout << "Logging out...";
+                break;
+            }
+            if (command == "mailbox")
+                mailbox();
+            else if (command == "clear_mailbox")
+                clear_mailbox();
+            else if (command == "enroll")
+                enroll_input();
+            else if (command == "submit_assignment")
+                submit_assignment_input();
+            else if (command == "message")
+                message_input();
+            else if (command == "change_password")
+                change_password_input();
+            else if (command == "grades")
+                grades();
+            else
+                std::cout << "Invalid Command";
         }
-        else if (command == "submit_assignment")
-        {
-            std::cin >> Buffer;
-            String course = Buffer;
-            std::cin >> Buffer;
-            String assignment = Buffer;
-            std::cin.getline(Buffer, BUFFER_SIZE);
-            String message = Buffer;
-            
-            submit_assignment(course, assignment, message);
-        }
-        else if (command == "message")
-        {
-            int user_id;
-            std::cin >> user_id;
-            std::cin.getline(Buffer, BUFFER_SIZE);
-            String temp = Buffer;
-            
-            message(user_id, temp);
-        }
-        else if (command == "grades")
-            grades();
-        else
-            std::cout << "Invalid Command";
+    }
+    catch (std::exception& e)
+    {
+        std::cout << e.what() << '\n';
+        std::cout << "!!! Fatal error !!!\n";
     }
 }

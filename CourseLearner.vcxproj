@@ -157,6 +157,7 @@
     <ClCompile Include="Admin.cpp" />
     <ClCompile Include="AdminManager.cpp" />
     <ClCompile Include="AppManager.cpp" />
+    <ClCompile Include="BaseManager.cpp" />
     <ClCompile Include="DataRepository.cpp" />
     <ClCompile Include="StudentManager.cpp" />
     <ClCompile Include="Submission.cpp" />
@@ -173,6 +174,7 @@
     <ClInclude Include="Admin.h" />
     <ClInclude Include="AdminManager.h" />
     <ClInclude Include="AppManager.h" />
+    <ClInclude Include="BaseManager.h" />
     <ClInclude Include="DataRepository.h" />
     <ClInclude Include="SerializableList.hpp" />
     <ClInclude Include="StudentManager.h" />

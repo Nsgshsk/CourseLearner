@@ -3,8 +3,10 @@
 
 Submission::Grade::Grade() = default;
 
-Submission::Grade::Grade(uint8_t grade, const String& message, int teacher_id)
+Submission::Grade::Grade(double grade, const String& message, int teacher_id)
 {
+    if (grade < 2 || grade > 6)
+        throw std::invalid_argument("grade must be between 2 and 6");
     this->grade = grade;
     this->message = message;
     this->teacher_id = teacher_id;
@@ -12,7 +14,7 @@ Submission::Grade::Grade(uint8_t grade, const String& message, int teacher_id)
 
 void Submission::Grade::serialize(std::ofstream& ofs) const
 {
-    ofs.write((const char*)&grade, sizeof(uint8_t));
+    ofs.write((const char*)&grade, sizeof(double));
     ofs.write((const char*)&teacher_id, sizeof(int));
 
     size_t temp = message.length();
@@ -21,7 +23,7 @@ void Submission::Grade::serialize(std::ofstream& ofs) const
 
 void Submission::Grade::deserialize(std::ifstream& ifs)
 {
-    ifs.read((char*)&grade, sizeof(uint8_t));
+    ifs.read((char*)&grade, sizeof(double));
     ifs.read((char*)&teacher_id, sizeof(int));
 
     size_t temp;
@@ -55,7 +57,7 @@ Submission::Submission(const String& message, int student_id, const String& assi
     assignment_title_ = assignment_title;
 }
 
-void Submission::grade(uint8_t grade, const String& message, int teacher_id)
+void Submission::grade(double grade, const String& message, int teacher_id)
 {
     grade_ = Grade(grade, message, teacher_id);
 }

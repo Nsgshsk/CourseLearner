@@ -14,6 +14,9 @@ public:
     User& getUser(int id);
     const Course& getCourse(const String& name) const;
     Course& getCourse(const String& name);
+
+    const List<User>& getUsers() const;
+    List<User>& getUsers();
     
     void addUser(const User& user);
     void addCourse(const Course& course);

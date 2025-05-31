@@ -13,3 +13,8 @@ User(first_name, last_name, password)
 {
     generate_id();
 }
+
+void Teacher::setCount(unsigned char new_count)
+{
+    count = new_count;
+}

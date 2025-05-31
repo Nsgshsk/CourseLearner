@@ -1,20 +1,15 @@
 ﻿#pragma once
-#include "AppManager.h"
-#include "User.h"
+#include "BaseManager.h"
 
-class StudentManager
+class StudentManager : public BaseManager
 {
-    User* user_;
-    DataRepository* data_;
-
-    void mailbox();
-    void clear_mailbox();
-    void enroll(const String& course, const String& password);
-    void submit_assignment(const String& course, const String& assignment, const String& message);
-    void message(int user_id, const String& message);
-    void grades();
+    void enroll(const String& course, const String& password) const;
+    void submit_assignment(const String& course, const String& assignment, const String& message) const;
+    void grades() const;
     
 public:
-    StudentManager(User& user, DataRepository& data);
-    void login();
+    StudentManager(User* user, DataRepository* data);
+    void enroll_input() const;
+    void submit_assignment_input() const;
+    void login() override;
 };

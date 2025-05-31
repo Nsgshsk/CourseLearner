@@ -8,12 +8,12 @@ class Submission : public ISerializable, public ISerializableDebug
 {
     struct Grade : ISerializable, ISerializableDebug
     {
-        uint8_t grade;
+        double grade;
         int teacher_id;
         String message;
 
         Grade();
-        Grade(uint8_t grade, const String& message, int teacher_id);
+        Grade(double grade, const String& message, int teacher_id);
         
         void serialize(std::ofstream& ofs) const override;
         void deserialize(std::ifstream& ifs) override;
@@ -29,7 +29,7 @@ public:
     Submission();
     Submission(const String& message, int student_id, const String& assignment_title);
 
-    void grade(uint8_t grade, const String& message, int teacher_id);
+    void grade(double grade, const String& message, int teacher_id);
     int getStudentId() const;
     
     void serialize(std::ofstream& ofs) const override;
