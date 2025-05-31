@@ -4,6 +4,8 @@
 static constexpr int TEACHER_PREFIX = 2000;
 static constexpr int STUDENT_PREFIX = 1000;
 
+Course::Assignment::Assignment() = default;
+
 Course::Assignment::Assignment(const String& name)
 {
     this->name = name;
@@ -208,7 +210,7 @@ void Course::serialize(std::ofstream& ofs) const
 
 void Course::deserialize(std::ifstream& ifs)
 {
-    ifs.read((char*)teacher_id_, sizeof(int));
+    ifs.read((char*)&teacher_id_, sizeof(int));
     
     size_t temp;
     ifs.read((char*)&temp, sizeof(size_t));

@@ -4,17 +4,11 @@ static constexpr int PREFIX = 1000;
 
 void Student::generate_id()
 {
-    setId(PREFIX + count);
-    count++;
+    setId(PREFIX + rand() % PREFIX);
 }
 
 Student::Student(const String& first_name, const String& last_name, const String& password) :
-User(first_name, last_name, password)
+User(first_name, last_name, password, STUDENT)
 {
     generate_id();
-}
-
-void Student::setCount(unsigned char new_count)
-{
-    count = new_count;
 }

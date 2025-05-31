@@ -13,6 +13,7 @@ class Course final : public ISerializable, public ISerializableDebug
         String name;
         List<Submission> submissions;
 
+        Assignment();
         Assignment(const String& name);
 
         const Submission* getUserSubmission(int user_id) const;

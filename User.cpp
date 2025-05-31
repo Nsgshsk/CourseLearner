@@ -1,9 +1,6 @@
 ﻿#include "User.h"
 #include <fstream>
 
-static constexpr int TEACHER_PREFIX = 2000;
-static constexpr int STUDENT_PREFIX = 1000;
-
 String User::getFirstName() const
 {
     return first_name_;
@@ -41,11 +38,12 @@ void User::setId(int id)
 
 User::User() = default;
 
-User::User(const String& first_name, const String& last_name, const String& password) : id_(0)
+User::User(const String& first_name, const String& last_name, const String& password, UserType type) : id_(0)
 {
     first_name_ = first_name;
     last_name_ = last_name;
     password_ = password;
+    type_ = type;
 }
 
 int User::getId() const
@@ -55,14 +53,7 @@ int User::getId() const
 
 int User::getType() const
 {
-    if (getId() < STUDENT_PREFIX)
-        return 1;
-    if (getId() % TEACHER_PREFIX < STUDENT_PREFIX)
-        return 2;
-    if (getId() % STUDENT_PREFIX < STUDENT_PREFIX)
-        return 3;
-
-    return -1;
+    return type_;
 }
 
 bool User::validatePassword(const String& password)
@@ -106,6 +97,7 @@ const List<String>& User::getCourses() const
 void User::serialize(std::ofstream& ofs) const
 {
     ofs.write((const char*)&id_, sizeof(int));
+    ofs.write((const char*)&type_, sizeof(type_));
     
     size_t temp = first_name_.length();
     ofs.write((const char*)&temp, sizeof(size_t));
@@ -126,6 +118,7 @@ void User::serialize(std::ofstream& ofs) const
 void User::deserialize(std::ifstream& ifs)
 {
     ifs.read((char*)&id_, sizeof(int));
+    ifs.read((char*)&type_, sizeof(type_));
     
     size_t temp;
     ifs.read((char*)&temp, sizeof(size_t));
@@ -157,6 +150,7 @@ void User::deserialize(std::ifstream& ifs)
 void User::serialize_debug(std::ofstream& ofs) const
 {
     ofs << id_ << '\n';
+    ofs << (int)type_ << '\n';
     
     ofs << first_name_.length() << '\n';
     ofs << first_name_ << '\n';
@@ -173,6 +167,11 @@ void User::serialize_debug(std::ofstream& ofs) const
 
 void User::deserialize_debug(std::ifstream& ifs)
 {
+    ifs >> id_;
+    int temp;
+    ifs >> temp;
+    type_ = (UserType)temp;
+    
     ifs >> first_name_;
     ifs >> last_name_;
     ifs >> password_;

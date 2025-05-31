@@ -26,24 +26,24 @@ void AppManager::login()
         if (!user.validatePassword(password))
             throw std::invalid_argument("Invalid password");
 
-        switch (user.getType())
+        int type = user.getType();
+        if (type == 1)
         {
-        case 1:
             AdminManager am(&user, &data_);
             am.login();
-            break;
-        case 2:
+        }
+        else if (type == 2)
+        {
             TeacherManager tm(&user, &data_);
             tm.login();
-            break;
-        case 3:
+        }
+        else if (type == 3)
+        {
             StudentManager sm(&user, &data_);
             sm.login();
-            break;
-
-        default:
-            throw std::invalid_argument("Invalid User Type");
         }
+        else
+            throw std::invalid_argument("Invalid User Type");
     }
     catch (std::exception& e)
     {
@@ -61,7 +61,7 @@ AppManager::AppManager()
     {
         std::cout << e.what() << '\n';
         std::cout << "Creating new database...";
-        data_.addUser(Admin("admin", "", "0000"));
+        data_.addUser(Admin("admin", "admin", "0000"));
     }
 }
 
@@ -84,12 +84,12 @@ void AppManager::run()
     {
         std::cin >> Buffer;
         String command = Buffer;
-        if (command == "Exit")
+        if (command == "exit")
         {
             std::cout << "Shutting down...";
             break;
         }
-        if (command == "Login")
+        if (command == "login")
             login();
         else
             std::cout << "Invalid Command";

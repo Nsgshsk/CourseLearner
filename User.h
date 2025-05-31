@@ -4,9 +4,17 @@
 #include "Message.h"
 #include "String.h"
 
+enum UserType
+{
+    ADMIN = 1,
+    TEACHER,
+    STUDENT
+};
+
 class User : public ISerializable, public ISerializableDebug
 {
     int id_;
+    UserType type_;
     String first_name_;
     String last_name_;
     String password_;
@@ -19,7 +27,7 @@ protected:
 
 public:
     User();
-    User(const String& first_name, const String& last_name, const String& password);
+    User(const String& first_name, const String& last_name, const String& password, UserType type);
     
     int getId() const;
     int getType() const;

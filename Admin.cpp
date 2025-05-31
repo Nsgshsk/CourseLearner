@@ -2,17 +2,11 @@
 
 void Admin::generate_id()
 {
-    setId(count);
-    count++;
+    setId(0);
 }
 
 Admin::Admin(const String& first_name, const String& last_name, const String& password) :
-User(first_name, last_name, password)
+User(first_name, last_name, password, ADMIN)
 {
     generate_id();
-}
-
-void Admin::setCount(unsigned char new_count)
-{
-    count = new_count;
 }
