@@ -126,6 +126,24 @@ void Course::enroll(int participant_id, const String& password)
     throw std::invalid_argument("Invalid password");
 }
 
+List<Submission>& Course::getSubmissions(const String& assignment)
+{
+    for (size_t i = 0; i < assignments_.getSize(); i++)
+        if (assignments_[i].name == assignment)
+            return assignments_[i].submissions;
+
+    throw std::invalid_argument("Assignment not found");
+}
+
+const List<Submission>& Course::getSubmissions(const String& assignment) const
+{
+    for (size_t i = 0; i < assignments_.getSize(); i++)
+        if (assignments_[i].name == assignment)
+            return assignments_[i].submissions;
+
+    throw std::invalid_argument("Assignment not found");
+}
+
 void Course::createAssignment(const String& name)
 {
     assignments_.add(Assignment(name));

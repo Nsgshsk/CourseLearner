@@ -10,6 +10,7 @@ class TeacherManager : public BaseManager
     void assign_homework(const String& course, const String& title) const;
     void grade_homework(const String& course, const String& title, int user_id, double grade, const String& message) const;
     void message_students(const String& course, const String& message) const;
+    void view_assignment_submissions(const String& course, const String& assignment) const;
 
     void create_course_input() const;
     void add_to_course_input() const;
@@ -17,6 +18,7 @@ class TeacherManager : public BaseManager
     void grade_homework_input() const;
     void message_students_input() const;
     void set_course_password_input() const;
+    void view_assignment_submissions_input() const;
     
 public:
     TeacherManager(User* user, DataRepository* data);

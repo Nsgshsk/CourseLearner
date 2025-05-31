@@ -93,7 +93,7 @@ void StudentManager::login()
         std::cout << *user_ << '\n';
         while (true)
         {
-            std::cout << "> ";
+            std::cout << ">";
             std::cin >> Buffer;
             String command = Buffer;
             if (command == "logout")

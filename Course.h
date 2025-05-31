@@ -43,6 +43,9 @@ public:
 
     void enroll(int participant_id);
     void enroll(int participant_id, const String& password);
+
+    List<Submission>& getSubmissions(const String& assignment);
+    const List<Submission>& getSubmissions(const String& assignment) const;
     
     void createAssignment(const String& name);
     void submitAssignment(const String& name, const String& message, int student_id);

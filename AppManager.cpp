@@ -82,6 +82,7 @@ void AppManager::run()
 {
     while (true)
     {
+        std::cout << ">";
         std::cin >> Buffer;
         String command = Buffer;
         if (command == "exit")

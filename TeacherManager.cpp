@@ -92,7 +92,11 @@ void TeacherManager::grade_homework(const String& course, const String& title, i
         if (!temp.isCreator(user_->getId()))
             throw std::invalid_argument("You don't have permissions on this course");
 
+        User& participant = data_->getUser(user_id);
         temp.gradeSubmission(title, user_id, grade, message, user_->getId());
+        Message msg(user_->getFullName(), "You have been graded on "
+            + title + " in " + course + "!");
+        participant.addMessage(msg);
         std::cout << "Graded submission by " << user_id << "\n";
     }
     catch (std::exception& e)
@@ -128,6 +132,35 @@ void TeacherManager::message_students(const String& course, const String& messag
     {
         std::cout << e.what() << '\n';
     }
+}
+
+void TeacherManager::view_assignment_submissions(const String& course, const String& assignment) const
+{
+    try
+    {
+        Course& temp = data_->getCourse(course);
+        if (!temp.isCreator(user_->getId()))
+            throw std::invalid_argument("You don't have permissions on this course");
+
+        const List<Submission> submissions = temp.getSubmissions(assignment);
+        std::cout << assignment << ":\n";
+        for (size_t i = 0; i < submissions.getSize(); i++)
+            std::cout << submissions[i] << "\n";
+    }
+    catch (std::exception& e)
+    {
+        std::cout << e.what() << '\n';
+    }
+}
+
+void TeacherManager::view_assignment_submissions_input() const
+{
+    std::cin >> Buffer;
+    String course = Buffer;
+    std::cin >> Buffer;
+    String assignment = Buffer;
+
+    view_assignment_submissions(course, assignment);
 }
 
 void TeacherManager::create_course_input() const
@@ -208,7 +241,7 @@ void TeacherManager::login()
         std::cout << *user_ << '\n';
         while (true)
         {
-            std::cout << "> ";
+            std::cout << ">";
             std::cin >> Buffer;
             String command = Buffer;
             if (command == "logout")
@@ -236,6 +269,8 @@ void TeacherManager::login()
                 message_students_input();
             else if (command == "set_course_password")
                 set_course_password_input();
+            else if (command == "view_assignment_submissions")
+                view_assignment_submissions_input();
             else
                 std::cout << "Invalid Command\n";
         }

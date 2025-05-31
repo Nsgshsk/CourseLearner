@@ -50,7 +50,7 @@ void AdminManager::delete_user(int user_id)
     {
         const User& user = data_->getUser(user_id);
         data_->removeUser(user);
-        std::cout << "Deleted user " << user.getFullName() << '\n';
+        std::cout << "Deleted user " << user_id << '\n';
     }
     catch (std::exception& e)
     {
@@ -191,7 +191,7 @@ void AdminManager::login()
         std::cout << "Admin | " << user_->getId() << '\n';
         while (true)
         {
-            std::cout << "> ";
+            std::cout << ">";
             std::cin >> Buffer;
             String command = Buffer;
             if (command == "logout")
