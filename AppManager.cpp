@@ -60,7 +60,7 @@ AppManager::AppManager()
     catch (std::exception& e)
     {
         std::cout << e.what() << '\n';
-        std::cout << "Creating new database...";
+        std::cout << "Creating new database...\n";
         data_.addUser(Admin("admin", "admin", "0000"));
     }
 }
@@ -74,7 +74,7 @@ AppManager::~AppManager()
     catch (std::exception& e)
     {
         std::cout << e.what() << '\n';
-        std::cout << "!!! Data not saved !!!";
+        std::cout << "!!! Data not saved !!!\n";
     }
 }
 
@@ -86,12 +86,12 @@ void AppManager::run()
         String command = Buffer;
         if (command == "exit")
         {
-            std::cout << "Shutting down...";
+            std::cout << "Shutting down...\n";
             break;
         }
         if (command == "login")
             login();
         else
-            std::cout << "Invalid Command";
+            std::cout << "Invalid Command\n";
     }
 }

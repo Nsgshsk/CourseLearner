@@ -13,7 +13,7 @@ String User::getLastName() const
 
 String User::getFullName() const
 {
-    return first_name_ + last_name_;
+    return first_name_ + " " + last_name_;
 }
 
 void User::addCourse(const String& course)
@@ -56,7 +56,7 @@ int User::getType() const
     return type_;
 }
 
-bool User::validatePassword(const String& password)
+bool User::validatePassword(const String& password) const
 {
     return password_ == password;
 }

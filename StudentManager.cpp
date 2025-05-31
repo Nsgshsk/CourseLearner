@@ -34,6 +34,7 @@ void StudentManager::submit_assignment(const String& course, const String& assig
             throw std::invalid_argument("User has not enrolled in the course!");
 
         temp.submitAssignment(assignment, message, user_->getId());
+        std::cout << "Successfully submitted assignment into " << course << "!\n";
     }
     catch (std::exception& e)
     {
@@ -46,6 +47,7 @@ void StudentManager::grades() const
     try
     {
         const List<String>& courses = user_->getCourses();
+        std::cout << "Grades:\n\n";
         for (size_t i = 0; i < courses.getSize(); i++)
         {
             Course& temp = data_->getCourse(courses[i]);
@@ -88,13 +90,15 @@ void StudentManager::login()
 {
     try
     {
+        std::cout << *user_ << '\n';
         while (true)
         {
+            std::cout << "> ";
             std::cin >> Buffer;
             String command = Buffer;
             if (command == "logout")
             {
-                std::cout << "Logging out...";
+                std::cout << "Logging out...\n";
                 break;
             }
             if (command == "mailbox")
@@ -112,7 +116,7 @@ void StudentManager::login()
             else if (command == "grades")
                 grades();
             else
-                std::cout << "Invalid Command";
+                std::cout << "Invalid Command\n";
         }
     }
     catch (std::exception& e)

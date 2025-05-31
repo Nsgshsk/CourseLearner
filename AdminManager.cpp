@@ -27,7 +27,9 @@ void AdminManager::add_teacher(const String& first_name, const String& last_name
 
 void AdminManager::add_teacher(const String& first_name, const String& last_name, const String& password)
 {
-    data_->addUser(Teacher(first_name, last_name, password));
+    Teacher temp(first_name, last_name, password);
+    data_->addUser(temp);
+    std::cout << "Created teacher " << temp.getFullName() << " with id " << temp.getId() << '\n';
 }
 
 void AdminManager::add_student(const String& first_name, const String& last_name)
@@ -37,7 +39,9 @@ void AdminManager::add_student(const String& first_name, const String& last_name
 
 void AdminManager::add_student(const String& first_name, const String& last_name, const String& password)
 {
-    data_->addUser(Student(first_name, last_name, password));
+    Student temp(first_name, last_name, password);
+    data_->addUser(temp);
+    std::cout << "Created student " << temp.getFullName() << " with id " << temp.getId() << '\n';
 }
 
 void AdminManager::delete_user(int user_id)
@@ -46,6 +50,7 @@ void AdminManager::delete_user(int user_id)
     {
         const User& user = data_->getUser(user_id);
         data_->removeUser(user);
+        std::cout << "Deleted user " << user.getFullName() << '\n';
     }
     catch (std::exception& e)
     {
@@ -59,6 +64,7 @@ void AdminManager::delete_course(const String& course)
     {
         const Course& temp = data_->getCourse(course);
         data_->removeCourse(temp);
+        std::cout << "Deleted course " << course << '\n';
     }
     catch (std::exception& e)
     {
@@ -80,6 +86,8 @@ void AdminManager::message_all(const String& message)
         {
             std::cout << e.what() << '\n';
         }
+
+    std::cout << "Sending message to all users..." << '\n';
 }
 
 void AdminManager::view_mailbox(int user_id)
@@ -88,8 +96,9 @@ void AdminManager::view_mailbox(int user_id)
     {
         const User& user = data_->getUser(user_id);
 
+        std::cout << "Inbox:" << '\n' << '\n';
         for (size_t i = 0; i < user.getInboxSize(); ++i)
-            std::cout << user[i];
+            std::cout << '\t' << user[i];
     }
     catch (std::exception& e)
     {
@@ -109,7 +118,14 @@ void AdminManager::add_teacher_input()
     if (password.isEmpty())
         add_teacher(first_name, last_name);
     else
+    {
+        const char* temp = password.c_str();
+        while (*temp == ' ')
+            ++temp;
+        strcpy_s(Buffer, temp);
+        password = Buffer;
         add_teacher(first_name, last_name, password);
+    }
 }
 
 void AdminManager::add_student_input()
@@ -124,7 +140,14 @@ void AdminManager::add_student_input()
     if (password.isEmpty())
         add_student(first_name, last_name);
     else
+    {
+        const char* temp = password.c_str();
+        while (*temp == ' ')
+            ++temp;
+        strcpy_s(Buffer, temp);
+        password = Buffer;
         add_student(first_name, last_name, password);
+    }
 }
 
 void AdminManager::delete_user_input()
@@ -165,13 +188,15 @@ void AdminManager::login()
 {
     try
     {
+        std::cout << "Admin | " << user_->getId() << '\n';
         while (true)
         {
+            std::cout << "> ";
             std::cin >> Buffer;
             String command = Buffer;
             if (command == "logout")
             {
-                std::cout << "Logging out...";
+                std::cout << "Logging out...\n";
                 break;
             }
             if (command == "mailbox")
@@ -195,7 +220,7 @@ void AdminManager::login()
             else if (command == "view_mailbox")
                 view_mailbox_input();
             else
-                std::cout << "Invalid Command";
+                std::cout << "Invalid Command\n";
         }
     }
     catch (std::exception& e)

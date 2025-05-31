@@ -26,6 +26,7 @@ void TeacherManager::create_course(const String& course) const
 void TeacherManager::create_course(const String& course, const String& password) const
 {
     data_->addCourse(Course(course, password, user_->getId()));
+    std::cout << "Created course: " << course << '\n';
 }
 
 void TeacherManager::set_course_password(const String& course, const String& password) const
@@ -53,7 +54,11 @@ void TeacherManager::add_to_course(const String& course, int user_id) const
         if (!temp.isCreator(user_->getId()))
             throw std::invalid_argument("You don't have permission on this course");
 
-        temp.enroll(user_->getId());
+        User& participant = data_->getUser(user_id);
+        temp.enroll(participant.getId());
+        Message msg(user_->getFullName(), "You have been enrolled to " + course + "!");
+        participant.addMessage(msg);
+        std::cout << "Enrolled " << user_id << " into " << course << "!\n";
     }
     catch (std::exception& e)
     {
@@ -67,7 +72,7 @@ void TeacherManager::assign_homework(const String& course, const String& title) 
     {
         Course& temp = data_->getCourse(course);
         if (!temp.isCreator(user_->getId()))
-            throw std::invalid_argument("You don't have permission on this course");
+            throw std::invalid_argument("You don't have permissions on this course");
 
         temp.createAssignment(title);
         std::cout << "Created assignment successfully!\n";
@@ -85,9 +90,10 @@ void TeacherManager::grade_homework(const String& course, const String& title, i
     {
         Course& temp = data_->getCourse(course);
         if (!temp.isCreator(user_->getId()))
-            throw std::invalid_argument("You don't have permission on this course course");
+            throw std::invalid_argument("You don't have permissions on this course");
 
         temp.gradeSubmission(title, user_id, grade, message, user_->getId());
+        std::cout << "Graded submission by " << user_id << "\n";
     }
     catch (std::exception& e)
     {
@@ -101,7 +107,7 @@ void TeacherManager::message_students(const String& course, const String& messag
     {
         Course& temp = data_->getCourse(course);
         if (!temp.isCreator(user_->getId()))
-            throw std::invalid_argument("You don't have permission on this course");
+            throw std::invalid_argument("You don't have permissions on this course");
 
         List<int> students = temp.getParticipantsIds();
         const Message msg(user_->getFullName(), message);
@@ -115,6 +121,8 @@ void TeacherManager::message_students(const String& course, const String& messag
             {
                 continue;
             }
+
+        std::cout << "Message sent to all students!\n";
     }
     catch (std::exception& e)
     {
@@ -197,13 +205,15 @@ void TeacherManager::login()
 {
     try
     {
+        std::cout << *user_ << '\n';
         while (true)
         {
+            std::cout << "> ";
             std::cin >> Buffer;
             String command = Buffer;
             if (command == "logout")
             {
-                std::cout << "Logging out...";
+                std::cout << "Logging out...\n";
                 break;
             }
             if (command == "mailbox")
@@ -227,7 +237,7 @@ void TeacherManager::login()
             else if (command == "set_course_password")
                 set_course_password_input();
             else
-                std::cout << "Invalid Command";
+                std::cout << "Invalid Command\n";
         }
     }
     catch (std::exception& e)

@@ -1,9 +1,6 @@
 ﻿#include "Course.h"
 #include <fstream>
 
-static constexpr int TEACHER_PREFIX = 2000;
-static constexpr int STUDENT_PREFIX = 1000;
-
 Course::Assignment::Assignment() = default;
 
 Course::Assignment::Assignment(const String& name)
@@ -115,13 +112,7 @@ List<int> Course::getParticipantsIds() const
 
 void Course::enroll(int participant_id)
 {
-    if (participant_id % TEACHER_PREFIX < STUDENT_PREFIX)
-    {
-        participants_ids_.add(participant_id);
-        return;
-    }
-
-    throw std::invalid_argument("Participant not allowed");
+    participants_ids_.add(participant_id);
 }
 
 void Course::enroll(int participant_id, const String& password)

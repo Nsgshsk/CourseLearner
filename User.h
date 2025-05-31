@@ -35,7 +35,7 @@ public:
     String getLastName() const;
     String getFullName() const;
     
-    bool validatePassword(const String& password);
+    bool validatePassword(const String& password) const;
     void changePassword(const String& old_password, const String& new_password);
     
     size_t getInboxSize() const;

@@ -33,6 +33,7 @@ void BaseManager::mailbox() const
 void BaseManager::clear_mailbox() const
 {
     user_->clearMessages();
+    std::cout << "Inbox cleared!\n";
 }
 
 void BaseManager::message(int user_id, const String& message) const
@@ -41,6 +42,7 @@ void BaseManager::message(int user_id, const String& message) const
     {
         User& temp = data_->getUser(user_id);
         temp.addMessage(Message(user_->getFullName(), message));
+        std::cout << "Message sent successfully!\n";
     }
     catch (std::exception& e)
     {
